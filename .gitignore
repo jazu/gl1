@@ -1,0 +1,11 @@
+bin/
+gen/
+libs/
+
+.settings/
+
+*.class
+proguard*
+
+.classpath
+.project
