@@ -4,10 +4,18 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import com.example.opengl10tutorial.Cube;
+import com.example.opengl10tutorial.Square;
 
 public class MyRenderer implements Renderer {
-
-	Square square = new Square();
+		
+	Square square = new Square();	
+	Plane plane = new Plane();
+	
+	Cube cube = new Cube(1,1,1);
+	
+	float angle = 1.0f;
+	
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		gl.glClearColor(0.9f, 0.5f, 0.0f, 0.8f);
@@ -22,7 +30,11 @@ public class MyRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glTranslatef(0.0f,0.0f,-10.0f);
-		square.draw(gl);
+		gl.glRotatef(angle, 1.0f, 1.0f, 0.0f);
+//		square.draw(gl);
+//		plane.draw(gl);
+		cube.draw(gl);		
+		angle++;
 	}
 	
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
