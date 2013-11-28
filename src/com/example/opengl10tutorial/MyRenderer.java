@@ -2,6 +2,7 @@ package com.example.opengl10tutorial;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import com.example.opengl10tutorial.Cube;
@@ -16,6 +17,16 @@ public class MyRenderer implements Renderer {
 	
 	float angle = 1.0f;
 	
+	float[] varit = {	1f, 0.6f, 0f, 1f, // point 0 
+						0f, 1f, 0.6f, 1f, // point 1 
+						0f, 0f, 0.667f, 1f, // point 2 
+						1f, 0f, 1f, 1f, // point 3
+						1f, 0f, 0f, 1f, // point 4
+						0.2f, 1f, 0.7f, 1f, // point 5
+						0f, 0f, 1f, 1f, // point 6
+						1f, 0.4f, 1f, 1f, // point 7
+					};
+	
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		gl.glClearColor(0.9f, 0.5f, 0.0f, 0.8f);
@@ -24,6 +35,7 @@ public class MyRenderer implements Renderer {
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		cube.setColors(varit);
 	}
 	
 	public void onDrawFrame(GL10 gl) {

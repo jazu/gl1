@@ -7,6 +7,10 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.opengl.GLUtils;
 
 public class Mesh {
 
@@ -74,9 +78,6 @@ public class Mesh {
 		rgba[2] = blue;
 		rgba[3] = alpha;
 	}
-
-	
-
 	
 	protected void setColors(float[] colors) {
 		ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);
