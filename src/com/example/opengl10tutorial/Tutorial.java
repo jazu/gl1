@@ -12,9 +12,8 @@ public class Tutorial extends Activity {
 		super.onCreate(savedInstanceState);
 		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		GLSurfaceView view = new GLSurfaceView(this);
-		view.setRenderer(new MyRenderer());
+		GLSurfaceView view = new MyRenderer(this);
 		setContentView(view);
-		this.startActivity( new Intent(this,Obj3DView.class));
+//		this.startActivity( new Intent(this,Obj3DView.class));
 	}
 }

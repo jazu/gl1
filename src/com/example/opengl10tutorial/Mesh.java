@@ -1,5 +1,7 @@
 package com.example.opengl10tutorial;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -21,6 +23,7 @@ public class Mesh {
 	private float[] rgba = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 	private FloatBuffer colorBuffer = null;
 	private FloatBuffer texBuffer = null;
+	public int[] tex = new int[1];
 	
 	public float x = 0;
 	public float y = 0;
@@ -32,13 +35,15 @@ public class Mesh {
 	
 	public void draw(GL10 gl) {
 		
-	
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, tex[0]);
 		
 		gl.glFrontFace(GL10.GL_CCW);
 	//	gl.glEnable(GL10.GL_CULL_FACE); //enable only if there is no rotation
 		gl.glCullFace(GL10.GL_BACK);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, verticesBuffer);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuffer);
 		gl.glColor4f(rgba[0], rgba[1], rgba[2], rgba[3]);
 			if ( colorBuffer != null ) {
 				gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
@@ -53,6 +58,7 @@ public class Mesh {
 		
 		gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indicesBuffer);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 	//	gl.glDisable(GL10.GL_CULL_FACE); //enable only if there is no rotation
 	}
 	
@@ -86,5 +92,49 @@ public class Mesh {
 		colorBuffer = cbb.asFloatBuffer();
 		colorBuffer.put(colors);
 		colorBuffer.position(0);
+	}
+	protected void setTextureCoords(float[] tex) {
+	ByteBuffer tbb = ByteBuffer.allocateDirect(tex.length * 4);
+	tbb.order(ByteOrder.nativeOrder());
+	texBuffer = tbb.asFloatBuffer();
+	texBuffer.put(tex);
+	texBuffer.position(0);
+	}
+	
+	public void loadGLTextures(GL10 gl, Context context, int resID) {
+		//Get the texture from the Android resource directory
+		InputStream is = context.getResources().openRawResource(resID);
+		Bitmap bitmap = null;
+		try {
+			//BitmapFactory is an Android graphics utility for images
+			bitmap = BitmapFactory.decodeStream(is);
+
+		} finally {
+			//Always clear and close
+			try {
+				is.close();
+				is = null;
+			} catch (IOException e) {
+			}
+		}
+
+		//Generate one texture pointer...
+		gl.glGenTextures(1, tex, 0);
+		//...and bind it to our array
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, tex[0]);
+		
+		//Create Nearest Filtered Texture
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+
+		//Different possible texture parameters, e.g. GL10.GL_CLAMP_TO_EDGE
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT);
+		gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
+		
+		//Use the Android GLUtils to specify a two-dimensional texture image from our bitmap
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+		
+		//Clean up
+		bitmap.recycle();
 	}
 }
