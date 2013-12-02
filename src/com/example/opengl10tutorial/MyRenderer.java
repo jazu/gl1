@@ -17,11 +17,11 @@ public class MyRenderer implements Renderer {
 	
 	float angle = 1.0f;
 	
-	float[] varit = {	1f, 0.6f, 0f, 1f, // point 0 
-						0f, 1f, 0.6f, 1f, // point 1 
-						0f, 0f, 0.667f, 1f, // point 2 
-						1f, 0f, 1f, 1f, // point 3
-						1f, 0f, 0f, 1f, // point 4
+	float[] varit = {	0.7f, 0.6f, 0.5f, 0.5f, // point 0 
+						1.0f, 0.5f, 0.85f, 0.5f, // point 1 
+						0.5f, 0.5f, 0.5f, 0.9f, // point 2 
+						0.68f, 0.5f, 1.0f, 0.5f, // point 3
+						0.5f, 0.5f, 0.5f, 0.5f, // point 4
 						0.2f, 1f, 0.7f, 1f, // point 5
 						0f, 0f, 1f, 1f, // point 6
 						1f, 0.4f, 1f, 1f, // point 7
@@ -45,7 +45,7 @@ public class MyRenderer implements Renderer {
 		gl.glRotatef(angle, 1.0f, 1.0f, 0.0f);
 //		square.draw(gl);
 //		plane.draw(gl);
-		cube.draw(gl);		
+		cube.draw(gl);	
 		angle++;
 	}
 	

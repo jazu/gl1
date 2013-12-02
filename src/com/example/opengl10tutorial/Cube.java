@@ -36,4 +36,3 @@ public class Cube extends Mesh {
 		setVertices(vertices);
 	}
 }
-

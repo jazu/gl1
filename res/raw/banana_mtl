@@ -1,0 +1,14 @@
+newmtl Banana_0
+map_Kd banana_t1.jpg
+newmtl Banana_1
+map_Kd banana_t2.jpg
+newmtl Banana_2
+map_Kd banana_t3.jpg
+newmtl Banana_3
+map_Kd banana_t4.jpg
+newmtl Banana_4
+map_Kd banana_t5.jpg
+newmtl Banana_5
+map_Kd banana_t6.jpg
+newmtl Banana_6
+map_Kd banana_t7.jpg

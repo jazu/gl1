@@ -3,6 +3,7 @@ package com.example.opengl10tutorial;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 
 public class Tutorial extends Activity {
 
@@ -14,5 +15,6 @@ public class Tutorial extends Activity {
 		GLSurfaceView view = new GLSurfaceView(this);
 		view.setRenderer(new MyRenderer());
 		setContentView(view);
+		this.startActivity( new Intent(this,Obj3DView.class));
 	}
 }

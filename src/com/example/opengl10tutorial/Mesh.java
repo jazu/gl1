@@ -20,6 +20,7 @@ public class Mesh {
 	
 	private float[] rgba = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 	private FloatBuffer colorBuffer = null;
+	private FloatBuffer texBuffer = null;
 	
 	public float x = 0;
 	public float y = 0;
