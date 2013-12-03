@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
+import android.view.MotionEvent;
 
 public class Mesh {
 
@@ -36,7 +37,6 @@ public class Mesh {
 	public void draw(GL10 gl) {
 		
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, tex[0]);
-		
 		gl.glFrontFace(GL10.GL_CCW);
 	//	gl.glEnable(GL10.GL_CULL_FACE); //enable only if there is no rotation
 		gl.glCullFace(GL10.GL_BACK);

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.view.MotionEvent;
 
 import com.example.opengl10tutorial.Cube;
 import com.example.opengl10tutorial.Square;
@@ -58,6 +59,8 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	
 	
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		gl.glEnable(GL10.GL_BLEND);
+		gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glClearColor(0.9f, 0.5f, 0.0f, 0.8f);
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glShadeModel(GL10.GL_SMOOTH);
@@ -69,7 +72,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		cube.setTextureCoords(CtextureCoords);
 		cube.loadGLTextures(gl, getContext(), R.drawable.nehe);
 		square.setTextureCoords(StextureCoords);
-		square.loadGLTextures(gl, getContext(), R.drawable.nehe);
+		square.loadGLTextures(gl, getContext(), R.drawable.guy2);
 	}
 	
 	public void onDrawFrame(GL10 gl) {
@@ -93,6 +96,21 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		
 	
 	} 
-	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		float x = event.getX();
+		float y = event.getY();
+		float oldX = x;
+		float oldY = y;
+		
+		if(event.getAction() == MotionEvent.ACTION_MOVE) {
+			float eroVanhaanXnaattiin = x - oldX;
+			float eroVanhaanYnaattiin = y - oldY;
+			
+		//	// int  = this.getHeight() / 10;
+			
+		}
+		return true;
+	}
 }
 
