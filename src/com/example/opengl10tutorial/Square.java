@@ -3,12 +3,23 @@ package com.example.opengl10tutorial;
 
 	public class Square extends Mesh {
 	
-	public Square() {
+	public float sx = 0;
+	
+	
+	
+		
+	public Square(float width, float height) {
+		width /= 2.0f;
+		
+		height /= 2.0f;
+		
+		
+		
 		float vertices[] = {
-			-1.0f, 1.0f, 0.0f,	//v0 top left
-			-1.0f, -1.0f, 0.0f,	//v1 bottom left
-			1.0f, -1.0f, 0.0f,	//v2 bottom right
-			1.0f, 1.0f, 0.0f,	//v3 top right
+			-width, height, 0.0f,	//v0 top left
+			-width, -height, 0.0f,	//v1 bottom left
+			width, -height, 0.0f,	//v2 bottom right
+			width, height, 0.0f,	//v3 top right
 		};
 		
 		short[] indices = {

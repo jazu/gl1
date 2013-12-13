@@ -26,40 +26,31 @@ public class Mesh {
 	private FloatBuffer texBuffer = null;
 	public int[] tex = new int[1];
 	
-	public float x = 0;
-	public float y = 0;
-	public float z = 0;
-	
-	public float rx = 0;
-	public float ry = 0;
-	public float rz = 0;
-	
+
 	public void draw(GL10 gl) {
 		
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, tex[0]);
 		gl.glFrontFace(GL10.GL_CCW);
-	//	gl.glEnable(GL10.GL_CULL_FACE); //enable only if there is no rotation
+		gl.glEnable(GL10.GL_CULL_FACE); //enable only if there is no rotation
 		gl.glCullFace(GL10.GL_BACK);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, verticesBuffer);
-		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuffer);
+		
+		if ( texBuffer != null ) {
+			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuffer);
+		}
+		
 		gl.glColor4f(rgba[0], rgba[1], rgba[2], rgba[3]);
 			if ( colorBuffer != null ) {
 				gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 				gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
 			}
-		gl.glTranslatef(x, y, z);
-		gl.glRotatef(rx, 1, 0, 0);
-		gl.glRotatef(ry, 0, 1, 0);
-		gl.glRotatef(rz, 0, 0, 1);
-		
-		
 		
 		gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indicesBuffer);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-	//	gl.glDisable(GL10.GL_CULL_FACE); //enable only if there is no rotation
+		gl.glDisable(GL10.GL_CULL_FACE); //enable only if there is no rotation
 	}
 	
 	protected void setVertices(float[] vertices) {
@@ -93,12 +84,13 @@ public class Mesh {
 		colorBuffer.put(colors);
 		colorBuffer.position(0);
 	}
+	
 	protected void setTextureCoords(float[] tex) {
-	ByteBuffer tbb = ByteBuffer.allocateDirect(tex.length * 4);
-	tbb.order(ByteOrder.nativeOrder());
-	texBuffer = tbb.asFloatBuffer();
-	texBuffer.put(tex);
-	texBuffer.position(0);
+		ByteBuffer tbb = ByteBuffer.allocateDirect(tex.length * 4);
+		tbb.order(ByteOrder.nativeOrder());
+		texBuffer = tbb.asFloatBuffer();
+		texBuffer.put(tex);
+		texBuffer.position(0);
 	}
 	
 	public void loadGLTextures(GL10 gl, Context context, int resID) {
