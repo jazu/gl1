@@ -9,8 +9,7 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.view.MotionEvent;
 
-import com.example.opengl10tutorial.Cube;
-import com.example.opengl10tutorial.Square;
+import com.example.opengl10tutorial.R;
 
 public class MyRenderer extends GLSurfaceView implements Renderer {
 		
@@ -34,13 +33,12 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	float ballx = 0.0f;
 	float bally = 0.0f;
 	
-	float ballstartx = 0;
-	float ballstarty = 0;
+	float ballstartx = 0.0f;
+	float ballstarty = 0.0f;
 	
-	float ballxv = -5.0f;
-	float ballyv = 5.0f;
+	float ballxv = -10.0f;
+	float ballyv = 10.0f;
 
-	float padstartx = 0;
 	float padstarty = 0;
 	
 	
@@ -90,28 +88,29 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		
 		gl.glPushMatrix();
 		
-		gl.glTranslatef(ballstartx, ballstarty, 0.0f);
 		gl.glTranslatef(ballx, bally, 0.0f);
 		ball.draw(gl);
 		
-		if(bally >= scrh/2-35) { 
+		if(bally >= scrh-35) { 
 			ballyv = -2;
 		}
-		if(bally <= -scrh/2+35) {
+		if(bally <= scrh-scrh+35) {
 			ballyv = 2;
 		}
-		if(ballx <= -scrw/2+55 && bally <= lpady+100 && bally >= lpady-100) { 
-			ballxv=5;
+		if(ballx <= scrw-scrw+55 && bally <= lpady+100 && bally >= lpady-100) { 
+			ballxv=10;
 			}
 		
-		if(ballx >= scrw/2-55 && bally <= rpady+100 && bally >= rpady-100) { 
-			ballxv=-5;
+		if(ballx >= scrw-55 && bally <= rpady+100 && bally >= rpady-100) { 
+			ballxv=-10;
 			}
 	
-		if (ballx <= -scrw/2 || ballx >= scrw/2) { //to do: popup for losing and resetting 
+		if (ballx <= scrw-scrw || ballx >= scrw) { //to do: popup for losing and resetting 
 			gl.glPopMatrix();
 			gl.glPushMatrix();
-			gl.glTranslatef(ballstartx, ballstarty, 0.0f);
+			ballxv=0;
+			ballyv=0;
+			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
 			popup.draw(gl);
 			gl.glPopMatrix();
 			
@@ -146,23 +145,38 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		ballstartx = scrw/2;
 		ballstarty = scrh/2;
-//		padstartx = scrw/2;
-		padstarty = scrh/2;
+		ballx = ballstartx;
+		bally = ballstarty;
+		padstarty = scrh-scrh;
 		
 	} 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		float y = (getHeight()/2)-event.getY();
+		float y = getHeight()-event.getY();
 		float x = event.getX();
 		int lside = this.getWidth() / 2;
 				
-				if(x < lside) {
-					lpady = y;
-				}
+		if(event.getAction() == MotionEvent.ACTION_DOWN && ballx <= scrw-scrw || ballx >= scrw) {
+			ballx = ballstartx;
+			bally = ballstarty;
+			ballxv = -10.0f;
+			ballyv = 10.0f;
+		}
+		
+		if(event.getAction() == MotionEvent.ACTION_MOVE) {
+		
+			if(x < lside) {
+				lpady = y;
+			}
+	
+	
+	
+			if(x > lside) {
+				rpady = y;
+			}
+			
+		}
 				
-				if(x > lside) {
-					rpady = y;
-				}
 		return true;
+		}
 	}
-}
