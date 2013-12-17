@@ -12,7 +12,10 @@ import android.view.MotionEvent;
 import com.example.opengl10tutorial.R;
 
 public class MyRenderer extends GLSurfaceView implements Renderer {
-		
+
+//TODO:
+	// multitouch
+	//
 	public MyRenderer(Context context) {
 		super(context);
 		setRenderer(this);
@@ -36,13 +39,18 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	float ballstartx = 0.0f;
 	float ballstarty = 0.0f;
 	
-	float ballxv = -10.0f;
-	float ballyv = 10.0f;
+	float ballxv = -5.0f;
+	float ballyv = -5.0f;
 
 	float padstarty = 0;
 	
+	float squarew = 100.0f;
+	float squareh = 100.0f;
 	
-	Square ball = new Square(100.0f, 100.0f);
+	float maxxv = 20.0f;
+	float maxyv = 20.0f;
+	
+	Square ball = new Square(squarew, squareh);
 	Square popup = new Square(500.0f, 500.0f);
 	Pads lpad = new Pads(padw, padh);
 	Pads rpad = new Pads(padw, padh);
@@ -91,29 +99,35 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		gl.glTranslatef(ballx, bally, 0.0f);
 		ball.draw(gl);
 		
-		if(bally >= scrh-35) { 
-			ballyv = -2;
+		if(bally >= scrh-(squarew/2) || bally <= (squarew/2)) { 
+			ballyv = -ballyv;
 		}
-		if(bally <= scrh-scrh+35) {
-			ballyv = 2;
-		}
-		if(ballx <= scrw-scrw+55 && bally <= lpady+100 && bally >= lpady-100) { 
-			ballxv=10;
-			}
-		
-		if(ballx >= scrw-55 && bally <= rpady+100 && bally >= rpady-100) { 
-			ballxv=-10;
+		if((ballx <= (padw/2)+(squarew/2) && bally <= lpady+(padh/2)+(squareh/2) && bally >= lpady-(padh/2)-(squareh/2)) || //check paddle-ball collision  
+		   (ballx >= scrw-(padw/2)-(squarew/2) && bally <= rpady+(padh/2) && bally >= rpady-(padh/2))) { 
+			ballxv = -ballxv*1.1f; 
 			}
 	
-		if (ballx <= scrw-scrw || ballx >= scrw) { //to do: popup for losing and resetting 
+//		if(ballx <= ){ //check if ball is inside the pad, if so translate ballx EXACTLY outside the padw/2 
+//			
+//		}
+		
+		if (ballx <= 0 || ballx >= scrw) { //popup for losing and resetting 
 			gl.glPopMatrix();
 			gl.glPushMatrix();
-			ballxv=0;
-			ballyv=0;
 			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
 			popup.draw(gl);
 			gl.glPopMatrix();
 			
+		}
+		
+		if(ballxv >= maxxv ||  ballyv >= maxyv) {  //set max speed for x and y
+			ballxv = -19.0f;
+			ballyv = -19.0f;
+		}
+															//TODO: now if either one (xv or yv) is over the limit both will be reduced to 19, make them separate!
+		if(ballxv <= -maxxv || ballyv <= -maxyv) {
+			ballxv = 19.0f;
+			ballyv = 19.0f;
 		}
 		
 		gl.glPopMatrix();
@@ -131,7 +145,9 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		gl.glPopMatrix();
 		
 		ballx+=ballxv;
-		bally+=ballyv;
+//		bally+=ballyv;
+		
+		
 		
 	}
 	
@@ -155,28 +171,25 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		float y = getHeight()-event.getY();
 		float x = event.getX();
 		int lside = this.getWidth() / 2;
-				
-		if(event.getAction() == MotionEvent.ACTION_DOWN && ballx <= scrw-scrw || ballx >= scrw) {
-			ballx = ballstartx;
+		
+		if(event.getAction() == MotionEvent.ACTION_DOWN && ballx <= scrw-scrw-(scrw/2) || ballx >= scrw+(scrw/5)) {  //reset if game has ended and 
+			ballx = ballstartx;																	   //the user touches screen
 			bally = ballstarty;
 			ballxv = -10.0f;
-			ballyv = 10.0f;
+			ballyv = -10.0f;
 		}
 		
 		if(event.getAction() == MotionEvent.ACTION_MOVE) {
-		
-			if(x < lside) {
-				lpady = y;
-			}
-	
-	
-	
-			if(x > lside) {
-				rpady = y;
-			}
 			
-		}
-				
+			
+		            	if(x < lside) {
+		    				lpady = y;
+		    			}
+			
+		    			if(x > lside) {
+		    				rpady = y;
+		    			}
+		        }
 		return true;
 		}
 	}
