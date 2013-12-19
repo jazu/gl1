@@ -15,7 +15,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	//TODO:
 	// multitouch
 	// add a 3s timer when no touches register between when game has ended and user presses restart so no accidental restarts happen
-	//
+	// 
 	public MyRenderer(Context context) {
 		super(context);
 		setRenderer(this);
@@ -50,14 +50,26 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	float maxxv = 25.0f;
 	float maxyv = 25.0f;
 	
+	float angle = 0.0f;
+	
 	static final int STATE_STARTED = 1;
 	static final int STATE_GAMEOVER = 2;
+	static final int STATE_MENU = 3;
+	static final int STATE_ABOUT = 4;
+	static final int STATE_EXIT = 5;
 	
-	int gameState = STATE_STARTED;  
+	int gameState = STATE_MENU;  
 	
 	
 	Square ball = new Square(squarew, squareh);
 	Square popup = new Square(500.0f, 500.0f);
+	Square menustart = new Square(250.0f, 250.0f);
+	Square menuexit = new Square(250.0f, 250.0f);
+	Square menuabout = new Square(250.0f, 250.0f);
+	Square about = new Square(720.0f, 720.0f);
+	Square aboutVer = new Square(200.0f, 200.0f);
+	
+	Pads aboutback = new Pads (300.0f, 720.0f);
 	Pads lpad = new Pads(padw, padh);
 	Pads rpad = new Pads(padw, padh);
 	
@@ -93,11 +105,62 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		ball.loadGLTextures(gl, getContext(), R.drawable.guy2);
 		popup.setTextureCoords(StextureCoords);
 		popup.loadGLTextures(gl, getContext(), R.drawable.loser);
+		menustart.setTextureCoords(StextureCoords);
+		menustart.loadGLTextures(gl, getContext(), R.drawable.start);
+		menuabout.setTextureCoords(StextureCoords);
+		menuabout.loadGLTextures(gl, getContext(), R.drawable.about);
+		menuexit.setTextureCoords(StextureCoords);
+		menuexit.loadGLTextures(gl, getContext(), R.drawable.exit);
+		about.setTextureCoords(StextureCoords);
+		about.loadGLTextures(gl, getContext(), R.drawable.abouts);
+		aboutVer.setTextureCoords(StextureCoords);
+		aboutVer.loadGLTextures(gl, getContext(), R.drawable.aboutv);
 	}
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
+		if(gameState == STATE_MENU) {
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+			gl.glRotatef(angle, 0.0f, 0.0f, 0.0f);
+			menustart.draw(gl);
+			gl.glPopMatrix();
+		
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/1.3f, scrh/1.4f, 0.0f);
+			gl.glRotatef(angle, 0.0f, 0.0f, 0.0f);
+			menuabout.draw(gl);
+			gl.glPopMatrix();
+			
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/5, scrh/5, 0.0f); 
+			gl.glRotatef(angle, 0.0f, 0.0f, 0.0f);
+			menuexit.draw(gl);
+			gl.glPopMatrix();
+			
+			angle++;
+			if(angle >= 90) {
+				angle = -angle;
+			}
+		}
+		
+		if(gameState == STATE_ABOUT) {
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+			about.draw(gl);
+			gl.glPopMatrix();
+			
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/1.1f, scrh/7.0f, 0.0f);
+			aboutVer.draw(gl);
+			gl.glPopMatrix();
+			
+			gl.glPushMatrix();
+			gl.glTranslatef(0, scrh/2, 0.0f);
+			aboutback.draw(gl);
+			gl.glPopMatrix();
+		}
 	
 		if(gameState == STATE_STARTED) {
 			
@@ -167,6 +230,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 				popup.draw(gl);
 				gl.glPopMatrix();
 			}
+		
 		}
 	
 	
@@ -190,6 +254,27 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		float y = getHeight()-event.getY();
 		float x = event.getX();
 		int lside = this.getWidth() / 2;
+
+		
+		if(gameState == STATE_MENU) {
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/2)+125) && (x >= (scrw/2)-125) && (y <= (scrh/2)+125) && (y >= (scrh/2)-125)) {
+				gameState = STATE_STARTED;
+			}
+			
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/5)+125) && (x >= (scrw/5)-125) && (y <= (scrh/5)+125) && (y >= (scrh/5)-125)) {
+				gameState = STATE_EXIT;
+			}
+				
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/1.3f)+125) && (x >= (scrw/1.3f)-125) && (y <= (scrh/1.4)+125) && (y >= (scrh/1.4f)-125)) {
+				gameState = STATE_ABOUT;
+			}
+		}
+		
+		if(gameState == STATE_ABOUT) { 
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= 150) && (y <= (scrh/2)+360) && (y >= (scrh/2)-360)) {
+				gameState = STATE_MENU;
+			}
+		}
 		
 		if(gameState == STATE_GAMEOVER) {
 				if(event.getAction() == MotionEvent.ACTION_DOWN) {  //reset if game has ended and 
