@@ -56,7 +56,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	static final int STATE_GAMEOVER = 2;
 	static final int STATE_MENU = 3;
 	static final int STATE_ABOUT = 4;
-	static final int STATE_EXIT = 5;
+	static final int STATE_HELP = 5;
 	
 	int gameState = STATE_MENU;  
 	
@@ -64,12 +64,16 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 	Square ball = new Square(squarew, squareh);
 	Square popup = new Square(500.0f, 500.0f);
 	Square menustart = new Square(250.0f, 250.0f);
-	Square menuexit = new Square(250.0f, 250.0f);
+	Square menuhelp = new Square(250.0f, 250.0f);
 	Square menuabout = new Square(250.0f, 250.0f);
-	Square about = new Square(720.0f, 720.0f);
 	Square aboutVer = new Square(200.0f, 200.0f);
+	Square bg = new Square(1280f, 720f); //make it so it scales it to screen size
+	Square aboutbg = new Square(1280f, 720f); //make it so it scales it to screen size
+	Square bg2 = new Square(1280f, 720f); //make it so it scales it to screen size
+	Square aboutback = new Square (150.0f, 720.0f);
+	Square replay = new Square (150.0f, 720.0f);
+	Square bghelp = new Square(1280f, 720f); //make it so it scales it to screen size
 	
-	Pads aboutback = new Pads (300.0f, 720.0f);
 	Pads lpad = new Pads(padw, padh);
 	Pads rpad = new Pads(padw, padh);
 	
@@ -109,18 +113,36 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		menustart.loadGLTextures(gl, getContext(), R.drawable.start);
 		menuabout.setTextureCoords(StextureCoords);
 		menuabout.loadGLTextures(gl, getContext(), R.drawable.about);
-		menuexit.setTextureCoords(StextureCoords);
-		menuexit.loadGLTextures(gl, getContext(), R.drawable.exit);
-		about.setTextureCoords(StextureCoords);
-		about.loadGLTextures(gl, getContext(), R.drawable.abouts);
+		menuhelp.setTextureCoords(StextureCoords);
+		menuhelp.loadGLTextures(gl, getContext(), R.drawable.help);
+		aboutbg.setTextureCoords(StextureCoords);
+		aboutbg.loadGLTextures(gl, getContext(), R.drawable.aboutbg);
 		aboutVer.setTextureCoords(StextureCoords);
 		aboutVer.loadGLTextures(gl, getContext(), R.drawable.aboutv);
+		bg.setTextureCoords(StextureCoords);
+		bg.loadGLTextures(gl, getContext(), R.drawable.bg);
+		aboutback.setTextureCoords(StextureCoords);
+		aboutback.loadGLTextures(gl, getContext(), R.drawable.back);
+		replay.setTextureCoords(StextureCoords);
+		replay.loadGLTextures(gl, getContext(), R.drawable.replay);
+		bg2.setTextureCoords(StextureCoords);
+		bg2.loadGLTextures(gl, getContext(), R.drawable.bg2);
+		bghelp.setTextureCoords(StextureCoords);
+		bghelp.loadGLTextures(gl, getContext(), R.drawable.bghelp);
+		
 	}
 	public void onDrawFrame(GL10 gl) {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
 		if(gameState == STATE_MENU) {
+			
+			gl.glPushMatrix();
+			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+			bg.draw(gl);
+			gl.glPopMatrix();
+			
+			
 			gl.glPushMatrix();
 			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
 			gl.glRotatef(angle, 0.0f, 0.0f, 0.0f);
@@ -136,7 +158,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 			gl.glPushMatrix();
 			gl.glTranslatef(scrw/5, scrh/5, 0.0f); 
 			gl.glRotatef(angle, 0.0f, 0.0f, 0.0f);
-			menuexit.draw(gl);
+			menuhelp.draw(gl);
 			gl.glPopMatrix();
 			
 			angle++;
@@ -148,7 +170,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		if(gameState == STATE_ABOUT) {
 			gl.glPushMatrix();
 			gl.glTranslatef(scrw/2, scrh/2, 0.0f);
-			about.draw(gl);
+			aboutbg.draw(gl);
 			gl.glPopMatrix();
 			
 			gl.glPushMatrix();
@@ -157,7 +179,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 			gl.glPopMatrix();
 			
 			gl.glPushMatrix();
-			gl.glTranslatef(0, scrh/2, 0.0f);
+			gl.glTranslatef(75, scrh/2, 0.0f);
 			aboutback.draw(gl);
 			gl.glPopMatrix();
 		}
@@ -165,9 +187,15 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		if(gameState == STATE_STARTED) {
 			
 				gl.glPushMatrix();
+				gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+				bg2.draw(gl);
+				gl.glPopMatrix();
+				
+				gl.glPushMatrix();
 				gl.glTranslatef(ballx, bally, 0.0f);
 				ball.draw(gl);
-				
+				gl.glPopMatrix();
+			
 				if(bally >= scrh-(squarew/2) || bally <= (squarew/2)) { 
 					ballyv = -ballyv*1.02f;
 				}
@@ -184,7 +212,7 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 							ballx = scrw-(padw/2)-(squarew/2);
 							}
 					}
-				
+				//
 				if(ballxv <= -maxxv){  //set max speed for x and y
 					ballxv = -25.0f;
 				}
@@ -222,12 +250,52 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		}
 		
 		if(gameState == STATE_GAMEOVER) {
-		
+				gl.glPushMatrix();
+				gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+				bg2.draw(gl);
+				gl.glPopMatrix();
+				
+			
+				gl.glPushMatrix();
+				gl.glTranslatef(75, scrh/2, 0.0f);
+				aboutback.draw(gl);
+				gl.glPopMatrix();
+				
+				gl.glPushMatrix();
+				gl.glTranslatef(scrw-75, scrh/2, 0.0f);
+				replay.draw(gl);
+				gl.glPopMatrix();
+			
+				gl.glPushMatrix();
+				ballx = ballstartx;                                                                                                                                                                 
+                bally = ballstarty;
+                ballxv = -5.0f;
+                ballyv = -5.0f;
+                gl.glPopMatrix();
+                
 				//popup for losing and resetting 
 				gl.glPopMatrix();
 				gl.glPushMatrix();
 				gl.glTranslatef(scrw/2, scrh/2, 0.0f);
 				popup.draw(gl);
+				gl.glPopMatrix();
+			}
+		
+			if(gameState == STATE_HELP) {
+				gl.glPushMatrix();
+				gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+				bg2.draw(gl);
+				gl.glPopMatrix();
+				
+				gl.glPushMatrix();
+				gl.glTranslatef(scrw/2, scrh/2, 0.0f);
+				bghelp.draw(gl);
+				gl.glPopMatrix();
+				
+
+				gl.glPushMatrix();
+				gl.glTranslatef(75, scrh/2, 0.0f);
+				aboutback.draw(gl);
 				gl.glPopMatrix();
 			}
 		
@@ -255,14 +323,19 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		float x = event.getX();
 		int lside = this.getWidth() / 2;
 
-		
+		if(gameState == STATE_HELP) {
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= 150) && (y <= (scrh/2)+360) && (y >= (scrh/2)-360)) {   
+				gameState = STATE_MENU;
+			}
+		}
+		//
 		if(gameState == STATE_MENU) {
 			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/2)+125) && (x >= (scrw/2)-125) && (y <= (scrh/2)+125) && (y >= (scrh/2)-125)) {
 				gameState = STATE_STARTED;
 			}
 			
 			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/5)+125) && (x >= (scrw/5)-125) && (y <= (scrh/5)+125) && (y >= (scrh/5)-125)) {
-				gameState = STATE_EXIT;
+				gameState = STATE_HELP;
 			}
 				
 			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= (scrw/1.3f)+125) && (x >= (scrw/1.3f)-125) && (y <= (scrh/1.4)+125) && (y >= (scrh/1.4f)-125)) {
@@ -277,14 +350,15 @@ public class MyRenderer extends GLSurfaceView implements Renderer {
 		}
 		
 		if(gameState == STATE_GAMEOVER) {
-				if(event.getAction() == MotionEvent.ACTION_DOWN) {  //reset if game has ended and 
-					gameState = STATE_STARTED;						//the user touches screen
-					ballx = ballstartx;																	  			 
-					bally = ballstarty;
-					ballxv = -5.0f;
-					ballyv = -5.0f;
-					
-					
+			
+			
+			
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x <= 150) && (y <= (scrh/2)+360) && (y >= (scrh/2)-360)) {   
+				gameState = STATE_MENU;
+			}
+			if((event.getAction() == MotionEvent.ACTION_DOWN) && (x >= scrw-150) && (y <= (scrh/2)+360) && (y >= (scrh/2)-360)) {
+			
+				gameState = STATE_STARTED;
 				}
 		}
 		
