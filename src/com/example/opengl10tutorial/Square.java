@@ -2,11 +2,6 @@ package com.example.opengl10tutorial;
 
 
 	public class Square extends Mesh {
-	
-	public float sx = 0;
-	
-	
-	
 		
 	public Square(float width, float height) {
 		width /= 2.0f;
