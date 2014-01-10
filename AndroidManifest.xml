@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.opengl10tutorial"
+    package="com.angrysawblade.ass"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,17 +14,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" android:logo="@drawable/ic_launcher">
         <activity
-            android:name="com.example.opengl10tutorial.MyRenderer"
+            android:name="com.angrysawblade.ass.MyRenderer"
             android:label="@string/title_activity_my_renderer" >
         </activity>
+      
         
         <activity
-            android:name="Obj3DView" 
-            android:label="@string/app_name">
-        </activity>
-        
-        <activity
-            android:name="com.example.opengl10tutorial.Tutorial"
+            android:name="com.angrysawblade.ass.Tutorial"
             android:label="@string/title_activity_tutorial" >
               <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
